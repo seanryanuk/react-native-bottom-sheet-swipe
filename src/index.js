@@ -24,11 +24,13 @@ type Props = {
   style?: object,
   onShowMini?: () => void,
   onShowFull?: () => void,
+  differenciable: boolean,
   animation?: 'linear' | 'spring' | 'easeInEaseOut' | 'none'
 };
 export default class SwipeUpDown extends Component<Props> {
   static defautProps = {
-    disablePressToShow: false
+    disablePressToShow: false,
+    differenciable: true,
   };
   constructor(props) {
     super(props);
@@ -163,7 +165,7 @@ export default class SwipeUpDown extends Component<Props> {
           onClose={() => this.showMini()}
           hasRef={ref => (this.swipeIconRef = ref)}
         />
-        {collapsed ? (
+        {collapsed && differenciable ? (
           itemMini ? (
             <TouchableOpacity
               activeOpacity={this.disablePressToShow ? 1 : 0.6}
