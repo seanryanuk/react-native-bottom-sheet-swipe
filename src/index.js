@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 import SwipeIcon from './components/SwipeIcon';
-import images from '../../assets/images';
+import images from './assets/images';
 
 const MARGIN_TOP = Platform.OS === 'ios' ? 20 : 0;
 const DEVICE_HEIGHT = Dimensions.get('window').height - MARGIN_TOP;
@@ -24,13 +24,11 @@ type Props = {
   style?: object,
   onShowMini?: () => void,
   onShowFull?: () => void,
-  differenciable: boolean,
   animation?: 'linear' | 'spring' | 'easeInEaseOut' | 'none'
 };
 export default class SwipeUpDown extends Component<Props> {
   static defautProps = {
-    disablePressToShow: false,
-    differenciable: true,
+    disablePressToShow: false
   };
   constructor(props) {
     super(props);
@@ -86,7 +84,6 @@ export default class SwipeUpDown extends Component<Props> {
   _onPanResponderMove(event, gestureState) {
     if (gestureState.dy > 0 && !this.checkCollapsed) {
       // SWIPE DOWN
-
       this.customStyle.style.top = this.top + gestureState.dy;
       this.customStyle.style.height = DEVICE_HEIGHT - gestureState.dy;
       this.swipeIconRef && this.swipeIconRef.setState({ icon: images.minus });
@@ -133,11 +130,9 @@ export default class SwipeUpDown extends Component<Props> {
 
   showMini() {
     const { onShowMini, itemMini } = this.props;
-    this.customStyle.style.top = itemMini
-      ? DEVICE_HEIGHT - this.SWIPE_HEIGHT
-      : DEVICE_HEIGHT;
+    this.customStyle.style.top = DEVICE_HEIGHT - (this.SWIPE_HEIGHT + 20);
     this.customStyle.style.height = itemMini ? this.SWIPE_HEIGHT : 0;
-    this.swipeIconRef && this.swipeIconRef.setState({ showIcon: false });
+    this.swipeIconRef && this.swipeIconRef.setState({ showIcon: true});
     this.updateNativeProps();
     !this.state.collapsed && this.setState({ collapsed: true });
     this.checkCollapsed = true;
@@ -155,7 +150,8 @@ export default class SwipeUpDown extends Component<Props> {
           styles.wrapSwipe,
           {
             height: this.SWIPE_HEIGHT,
-            marginTop: MARGIN_TOP
+            marginTop: MARGIN_TOP,
+            backgroundColor: "rgba(0, 0, 0, 0.3)",
           },
           !itemMini && collapsed && { marginBottom: -200 },
           style
@@ -165,7 +161,7 @@ export default class SwipeUpDown extends Component<Props> {
           onClose={() => this.showMini()}
           hasRef={ref => (this.swipeIconRef = ref)}
         />
-        {collapsed && differenciable ? (
+        {collapsed ? (
           itemMini ? (
             <TouchableOpacity
               activeOpacity={this.disablePressToShow ? 1 : 0.6}
