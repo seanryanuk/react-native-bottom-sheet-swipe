@@ -37,7 +37,11 @@ export default class SwipeUpDown extends Component<Props> {
     };
     this.disablePressToShow = props.disablePressToShow;
     this.SWIPE_HEIGHT = props.swipeHeight || 60;
-    this._panResponder = null;
+    this._panResponder = PanResponder.create({
+        onMoveShouldSetPanResponder: (event, gestureState) => true,
+        onPanResponderMove: this._onPanResponderMove.bind(this),
+        onPanResponderRelease: this._onPanResponderRelease.bind(this)
+    });
     this.top = this.SWIPE_HEIGHT;
     this.height = this.SWIPE_HEIGHT;
     this.customStyle = {
@@ -49,14 +53,6 @@ export default class SwipeUpDown extends Component<Props> {
     };
     this.checkCollapsed = true;
     this.showFull = this.showFull.bind(this);
-  }
-
-  componentWillMount() {
-    this._panResponder = PanResponder.create({
-      onMoveShouldSetPanResponder: (event, gestureState) => true,
-      onPanResponderMove: this._onPanResponderMove.bind(this),
-      onPanResponderRelease: this._onPanResponderRelease.bind(this)
-    });
   }
 
   componentDidMount() {
