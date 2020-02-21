@@ -20,6 +20,7 @@ type Props = {
   swipeHeight?: number,
   itemMini?: object,
   itemFull: object,
+  maxHeight: number,
   disablePressToShow?: boolean,
   style?: object,
   onShowMini?: () => void,
@@ -44,6 +45,7 @@ export default class SwipeUpDown extends Component<Props> {
     });
     this.top = this.SWIPE_HEIGHT;
     this.height = this.SWIPE_HEIGHT;
+    this.maxHeight = props.maxHeight || DEVICE_HEIGHT;
     this.customStyle = {
       style: {
         bottom: 0,
@@ -80,7 +82,7 @@ export default class SwipeUpDown extends Component<Props> {
   _onPanResponderMove(event, gestureState) {
     if (gestureState.dy > 0 && !this.checkCollapsed) {
       // SWIPE DOWN
-      this.customStyle.style.top = this.top + gestureState.dy;
+      this.customStyle.style.top = DEVICE_HEIGHT - this.maxHeight + gestureState.dy;
       this.customStyle.style.height = DEVICE_HEIGHT - gestureState.dy;
       this.swipeIconRef && this.swipeIconRef.setState({ icon: images.minus });
       !this.state.collapsed && this.setState({ collapsed: true });
@@ -114,8 +116,8 @@ export default class SwipeUpDown extends Component<Props> {
 
   showFull() {
     const { onShowFull } = this.props;
-    this.customStyle.style.top = 0;
-    this.customStyle.style.height = DEVICE_HEIGHT;
+    this.customStyle.style.top = DEVICE_HEIGHT - this.maxHeight;
+    this.customStyle.style.height = this.maxHeight;
     this.swipeIconRef &&
       this.swipeIconRef.setState({ icon: images.arrow_down, showIcon: true });
     this.updateNativeProps();
